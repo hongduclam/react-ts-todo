@@ -9,17 +9,20 @@ interface OwnProps {
 type Props = OwnProps;
 
 const TodoList: FunctionComponent<Props> = ({items, onComplete}) => {
+  const todoItems = React.useMemo(() => {
+    return items
+      .filter(item => !item.isDone)
+  }, [items])
   return (<div className={'todo-list-container'}>
     <ol className={'todo-list'}>
       {
-        items
-          .filter(item => !item.isDone)
+        todoItems
           .map(({id, task}: TodoItem) => {
-          return <div key={id} className={'todo-item'}>
-            <li id={`todo-item=${id}`}>{task}</li>
-            <button id={`complete-button-${id}`} onClick={() => onComplete(id)}>DONE</button>
-          </div>
-        })
+            return <div key={id} className={'todo-item'}>
+              <li id={`todo-item=${id}`}>{task}</li>
+              <button id={`complete-button-${id}`} onClick={() => onComplete(id)}>DONE</button>
+            </div>
+          })
       }
       {
         items.length === 0 && <strong style={{textAlign: "center"}}>
